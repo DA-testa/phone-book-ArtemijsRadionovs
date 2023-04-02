@@ -1,5 +1,3 @@
-# python3
-
 class Query:
     def __init__(self, query):
         self.type = query[0]
@@ -33,15 +31,16 @@ def process_queries(queries):
                 if contacts[j].number == cur_query.number:
                     contacts.pop(j)
                     break
-        else:
-            response = 'not found'
+        else: # find query
+            found = False
             for contact in contacts:
                 if contact.number == cur_query.number:
-                    response = contact.name
+                    result.append(contact.name)
+                    found = True
                     break
-            result.append(response)
+            if not found:
+                result.append('not found')
     return result
 
 if __name__ == '__main__':
     write_responses(process_queries(read_queries()))
-
