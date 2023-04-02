@@ -1,5 +1,3 @@
-# python3
-
 class Query:
     def __init__(self, query):
         self.type = query[0]
@@ -8,7 +6,7 @@ class Query:
             self.name = query[2]
 
 def read_queries():
-    n = int(input().replace('\r',''))
+    n = int(input())
     return [Query(input().split()) for i in range(n)]
 
 def write_responses(result):
@@ -19,27 +17,30 @@ def process_queries(queries):
     # Keep list of all existing (i.e. not deleted yet) contacts.
     contacts = []
     for cur_query in queries:
-        if cur_query.type == 'add': 
+        if cur_query.type == 'add':
+            # if we already have contact with such number,
+            # we should rewrite contact's name
             for contact in contacts:
                 if contact.number == cur_query.number:
                     contact.name = cur_query.name
                     break
-                else:
-                    contacts.append(cur_query) 
+            else: # otherwise, just add it
+                contacts.append(cur_query)
         elif cur_query.type == 'del':
             for j in range(len(contacts)):
                 if contacts[j].number == cur_query.number:
                     contacts.pop(j)
                     break
-        else:
-            response = 'not found'
+        else: # find query
+            found = False
             for contact in contacts:
                 if contact.number == cur_query.number:
-                    response = contact.name
+                    result.append(contact.name)
+                    found = True
                     break
-            result.append(response)
+            if not found:
+                result.append('not found')
     return result
 
 if __name__ == '__main__':
     write_responses(process_queries(read_queries()))
-
